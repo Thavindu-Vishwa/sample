@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cream Essence - Smooth & Modern UX</title>
+
+  <!-- AOS Scroll Animation -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --main-color: #fcdede;
+      --accent-color: #c94e4e;
+      --text-dark: #333;
+      --bg-light: #fff9f6;
+      --shadow-light: rgba(0,0,0,0.07);
+      --shadow-hover: rgba(0,0,0,0.12);
+      --transition-speed: 0.35s;
+    }
+
+    /* Smooth scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Header */
+    header {
+      background-color: var(--main-color);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: none;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: box-shadow var(--transition-speed);
+    }
+    /* Shadow on scroll */
+    header.scrolled {
+      box-shadow: 0 2px 8px var(--shadow-light);
+      background-color: #f9dede;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--accent-color);
+      user-select: none;
+    }
+
+    nav a {
+      margin-left: 1.2rem;
+      color: #555;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.25rem 0.3rem;
+      border-radius: 4px;
+      transition: color var(--transition-speed), background-color var(--transition-speed);
+      user-select: none;
+    }
+
+    nav a:hover,
+    nav a:focus {
+      color: var(--main-color);
+      background-color: var(--accent-color);
+      outline: none;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(145deg, #fcdede, #f6e9f0);
+      text-align: center;
+      padding: 4rem 1rem 3rem;
+      user-select: none;
+    }
+
+    .hero h2 {
+      font-size: 2.6rem;
+      color: var(--accent-color);
+      margin-bottom: 0.5rem;
+      animation: fadeInUp 1s ease forwards;
+      opacity: 0;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: #6b4e4e;
+      animation: fadeInUp 1s ease 0.3s forwards;
+      opacity: 0;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+    }
+
+    /* Products Section */
+    .products {
+      padding: 2.5rem 1rem 3rem;
+      text-align: center;
+      user-select: none;
+    }
+
+    .products h2 {
+      font-size: 1.7rem;
+      margin-bottom: 2.5rem;
+      color: var(--accent-color);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.6rem;
+      max-width: 100%;
+      padding: 0 0.5rem;
+      justify-items: center;
+    }
+
+    @media(min-width: 600px) {
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(min-width: 900px) {
+      .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+      }
+    }
+
+    .product-card {
+      perspective: 1100px;
+      cursor: pointer;
+      touch-action: manipulation;
+      user-select: none;
+      outline-offset: 4px;
+      outline: transparent;
+      border-radius: 20px;
+      will-change: transform;
+      transition: box-shadow var(--transition-speed);
+      width: 320px;
+      height: 320px;
+    }
+    .product-card:focus-visible {
+      outline: 3px solid var(--accent-color);
+    }
+    .product-card:hover,
+    .product-card:focus {
+      box-shadow: 0 8px 20px var(--shadow-hover);
+      transform: scale(1.03);
+    }
+
+    .product-inner {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 4px 14px var(--shadow-light);
+    }
+
+    .product-card.flip .product-inner {
+      transform: rotateY(180deg);
+    }
+
+    .product-front, .product-back {
+      position: absolute;
+      backface-visibility: hidden;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.1rem 1rem;
+    }
+
+    .product-front {
+      z-index: 2;
+      background: white;
+    }
+
+    .product-front img {
+      width: 100%;
+      height: 70%;
+      object-fit: cover;
+      border-radius: 12px;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .product-front h3 {
+      margin-top: 0.6rem;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--accent-color);
+    }
+
+    .product-back {
+      background: #fef0f0;
+      transform: rotateY(180deg);
+      color: #8b4e4e;
+      font-weight: 600;
+      font-size: 1rem;
+      line-height: 1.4;
+      padding: 1.5rem 1.3rem;
+      text-align: center;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--main-color);
+      color: #6b4e4e;
+      padding: 2.5rem 1rem 3rem;
+      text-align: center;
+      font-size: 0.95rem;
+      user-select: none;
+    }
+
+    footer p {
+      margin: 0.4rem 0;
+    }
+
+    .social-icons {
+      margin: 1rem 0 1.5rem;
+    }
+
+    .social-icons a {
+      margin: 0 10px;
+      color: var(--accent-color);
+      text-decoration: none;
+      font-size: 1.4rem;
+      transition: color var(--transition-speed);
+      display: inline-block;
+      user-select: none;
+    }
+    .social-icons a:hover,
+    .social-icons a:focus {
+      color: #a04141;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header id="header">
+    <h1>Cream Essence</h1>
+    <nav>
+      <a href="#products">Products</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" role="banner" aria-label="Welcome message">
+    <h2>Glow Naturally</h2>
+    <p>Pure skincare products for your natural beauty.</p>
+  </section>
+
+  <!-- Products Section -->
+  <section class="products" id="products" aria-label="Products section">
+    <h2>Our Products</h2>
+    <div class="product-grid">
+
+      <!-- 20 Products -->
+      <!-- You can replace src & descriptions below with your actual images and texts -->
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Glow Cream product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/FFC0CB/000000?text=Glow+Cream" alt="Glow Cream jar" />
+            <h3>Glow Cream</h3>
+          </div>
+          <div class="product-back">
+            <p>Brighten your day with vitamin C enriched glow cream. Perfect for daily use.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Hydra Cream product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/FFB6C1/000000?text=Hydra+Cream" alt="Hydra Cream jar" />
+            <h3>Hydra Cream</h3>
+          </div>
+          <div class="product-back">
+            <p>Deep hydration that lasts all day. Perfect for dry and sensitive skin.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Night Cream product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/FADADD/000000?text=Night+Cream" alt="Night Cream jar" />
+            <h3>Night Cream</h3>
+          </div>
+          <div class="product-back">
+            <p>Rejuvenate your skin overnight with our herbal night repair formula.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Revive Serum product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/F4A3A3/000000?text=Revive+Serum" alt="Revive Serum bottle" />
+            <h3>Revive Serum</h3>
+          </div>
+          <div class="product-back">
+            <p>Lightweight serum to revitalize tired skin and restore glow.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Soothing Balm product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/D4A3A3/000000?text=Soothing+Balm" alt="Soothing Balm jar" />
+            <h3>Soothing Balm</h3>
+          </div>
+          <div class="product-back">
+            <p>Calming balm for sensitive and irritated skin.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Radiance Oil product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/A3D4A3/000000?text=Radiance+Oil" alt="Radiance Oil bottle" />
+            <h3>Radiance Oil</h3>
+          </div>
+          <div class="product-back">
+            <p>Nourishing oil to give your skin a radiant glow.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Fresh Mist product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/A3A3D4/000000?text=Fresh+Mist" alt="Fresh Mist bottle" />
+            <h3>Fresh Mist</h3>
+          </div>
+          <div class="product-back">
+            <p>Refreshing facial mist for instant hydration.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Purify Clay Mask product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/D4D4A3/000000?text=Purify+Clay+Mask" alt="Purify Clay Mask jar" />
+            <h3>Purify Clay Mask</h3>
+          </div>
+          <div class="product-back">
+            <p>Detoxify and cleanse skin with natural clay minerals.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Balance Toner product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/A3D4D4/000000?text=Balance+Toner" alt="Balance Toner bottle" />
+            <h3>Balance Toner</h3>
+          </div>
+          <div class="product-back">
+            <p>Restore skin's natural pH and tighten pores.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Soft Glow Lotion product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/D4A3D4/000000?text=Soft+Glow+Lotion" alt="Soft Glow Lotion bottle" />
+            <h3>Soft Glow Lotion</h3>
+          </div>
+          <div class="product-back">
+            <p>Light lotion to give your skin a soft, natural glow.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Velvet Night Cream product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/BBA3D4/000000?text=Velvet+Night+Cream" alt="Velvet Night Cream jar" />
+            <h3>Velvet Night Cream</h3>
+          </div>
+          <div class="product-back">
+            <p>Rich night cream for deep hydration and repair.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Sun Shield SPF product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/D4BBA3/000000?text=Sun+Shield+SPF" alt="Sun Shield SPF bottle" />
+            <h3>Sun Shield SPF</h3>
+          </div>
+          <div class="product-back">
+            <p>Protect your skin from harmful UV rays all day.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Calm Repair Gel product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/A3D4BB/000000?text=Calm+Repair+Gel" alt="Calm Repair Gel tube" />
+            <h3>Calm Repair Gel</h3>
+          </div>
+          <div class="product-back">
+            <p>Soothing gel to calm irritated and red skin.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Silky Smooth Scrub product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/BBA3A3/000000?text=Silky+Smooth+Scrub" alt="Silky Smooth Scrub jar" />
+            <h3>Silky Smooth Scrub</h3>
+          </div>
+          <div class="product-back">
+            <p>Exfoliating scrub for soft and radiant skin.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Fresh Breeze Mist product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/A3BBA3/000000?text=Fresh+Breeze+Mist" alt="Fresh Breeze Mist bottle" />
+            <h3>Fresh Breeze Mist</h3>
+          </div>
+          <div class="product-back">
+            <p>Light refreshing mist with natural botanical extracts.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Luminous Eye Cream product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/D4BBA3/000000?text=Luminous+Eye+Cream" alt="Luminous Eye Cream jar" />
+            <h3>Luminous Eye Cream</h3>
+          </div>
+          <div class="product-back">
+            <p>Reduce dark circles and brighten the eye area.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Velvet Lip Balm product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/BBD4A3/000000?text=Velvet+Lip+Balm" alt="Velvet Lip Balm tube" />
+            <h3>Velvet Lip Balm</h3>
+          </div>
+          <div class="product-back">
+            <p>Hydrating lip balm for smooth, soft lips.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Citrus Glow Scrub product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/D4D4BBA3/000000?text=Citrus+Glow+Scrub" alt="Citrus Glow Scrub jar" />
+            <h3>Citrus Glow Scrub</h3>
+          </div>
+          <div class="product-back">
+            <p>Exfoliating scrub with a fresh citrus scent.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Berry Bliss Serum product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/BBD4D4/000000?text=Berry+Bliss+Serum" alt="Berry Bliss Serum bottle" />
+            <h3>Berry Bliss Serum</h3>
+          </div>
+          <div class="product-back">
+            <p>Antioxidant-rich serum to rejuvenate your skin.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Calming Chamomile Cream product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/D4BBD4/000000?text=Calming+Chamomile+Cream" alt="Calming Chamomile Cream jar" />
+            <h3>Calming Chamomile Cream</h3>
+          </div>
+          <div class="product-back">
+            <p>Gentle cream to soothe and calm skin redness.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card" tabindex="0" role="button" aria-pressed="false" aria-label="Velvet Glow Mask product card" data-aos="zoom-in">
+        <div class="product-inner">
+          <div class="product-front">
+            <img src="https://via.placeholder.com/320x224/BBD4D4/000000?text=Velvet+Glow+Mask" alt="Velvet Glow Mask jar" />
+            <h3>Velvet Glow Mask</h3>
+          </div>
+          <div class="product-back">
+            <p>Brightening mask to reveal radiant, soft skin.</p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" style="padding: 2rem 1rem; max-width: 600px; margin: auto; text-align: center; color: #6b4e4e;">
+    <h2>About Cream Essence</h2>
+    <p>
+      Cream Essence is a small, passionate skincare business focused on creating natural, gentle, and effective creams to enhance your beauty and confidence.
+      Every product is handmade with love, using only the best natural ingredients.
+    </p>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <p><strong>Cream Essence</strong> | One-Person Business</p>
+    <p>Email: <a href="mailto:hello@creamessence.com" style="color:var(--accent-color); text-decoration:none;">hello@creamessence.com</a></p>
+    <p>WhatsApp: <a href="https://wa.me/94701234567" style="color:var(--accent-color); text-decoration:none;">+94 70 123 4567</a></p>
+    <div class="social-icons" role="navigation" aria-label="Social media links">
+      <a href="#" aria-label="Website">🌐</a>
+      <a href="#" aria-label="Facebook">📘</a>
+      <a href="#" aria-label="Instagram">📸</a>
+    </div>
+    <p>© 2025 Cream Essence. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      once: true, // animate only once on scroll
+      duration: 700,
+      easing: 'ease-out-cubic'
+    });
+
+    const cards = document.querySelectorAll('.product-card');
+
+    cards.forEach(card => {
+      // Toggle flip on click or Enter key for accessibility
+      card.addEventListener('click', () => {
+        card.classList.toggle('flip');
+        updateAriaPressed(card);
+      });
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.classList.toggle('flip');
+          updateAriaPressed(card);
+        }
+      });
+    });
+
+    function updateAriaPressed(card) {
+      const pressed = card.classList.contains('flip');
+      card.setAttribute('aria-pressed', pressed);
+    }
+
+    // Header shadow on scroll
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if(window.scrollY > 5) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
+
+</body>
+</html>
